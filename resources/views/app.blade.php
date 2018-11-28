@@ -7,7 +7,7 @@
 <v-app> 
     <v-toolbar app>
             <v-toolbar-side-icon></v-toolbar-side-icon>
-            <v-toolbar-title>@{{title}}</v-toolbar-title>
+            <v-toolbar-title to="/">@{{title}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
             <template v-if="user==null">
@@ -22,7 +22,7 @@
     </v-toolbar>
     <v-content>
         <v-container fluid>
-        <router-view></router-view>
+            <router-view></router-view>
         </v-container>
     </v-content>
     <v-footer app></v-footer>

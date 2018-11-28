@@ -1,23 +1,23 @@
 <template>
-    <div class="container">
-        <item_list :items="items"></item_list>
-    </div>
+  <div class="container">
+    <span>teste</span>
+    <item-list :items="items"></item-list>
+  </div>
 </template>
 
 <script>
 import itemList from "./itemList.vue";
 export default {
-  data: {
-    function() {
-      return {
-        items: []
-      };
-    }
+  data() {
+    return {
+      items: []
+    };
   },
   methods: {
     getItems: function() {
       axios.get("api/items").then(response => {
         this.items = response.data.data;
+        console.log(response.data.data);
       });
     }
   },

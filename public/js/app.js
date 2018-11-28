@@ -25009,10 +25009,12 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_1_vuetify___default.a);
 
 
 var item = Vue.component("item", __webpack_require__(47));
+var item_list = Vue.component("item-list", __webpack_require__(49));
 
 var routes = [{
     path: "/items",
-    component: item
+    component: item,
+    item_list: item_list
 }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -25022,9 +25024,13 @@ var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
 window.Vue = __webpack_require__(3);
 var app = new Vue({
     el: "#app",
-    data: {
-        title: "Restaurant Management"
+    data: function data() {
+        return {
+            title: "Restaurant Management",
+            user: null
+        };
     },
+
     router: router
 });
 
@@ -73447,22 +73453,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: {
-    function: function _function() {
-      return {
-        items: []
-      };
-    }
+  data: function data() {
+    return {
+      items: []
+    };
   },
+
   methods: {
     getItems: function getItems() {
       var _this = this;
 
       axios.get("api/items").then(function (response) {
         _this.items = response.data.data;
+        console.log(response.data.data);
       });
     }
   },
@@ -73543,18 +73550,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {
-      headers: [{
-        text: "Dessert (100g serving)",
-        align: "left",
-        sortable: false,
-        value: "name"
-      }, { text: "Calories", value: "calories" }, { text: "Fat (g)", value: "fat" }, { text: "Carbs (g)", value: "carbs" }, { text: "Protein (g)", value: "protein" }, { text: "Iron (%)", value: "iron" }],
-      desserts: items
-    };
+    return {};
   },
 
   props: ["items"],
@@ -73568,54 +73576,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("v-data-table", {
-        staticClass: "elevation-1",
-        attrs: { headers: _vm.headers, items: _vm.items },
-        scopedSlots: _vm._u([
-          {
-            key: "items",
-            fn: function(props) {
-              return [
-                _c("td", [_vm._v(_vm._s(props.item.name))]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-xs-right" }, [
-                  _vm._v(_vm._s(props.item.name))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-xs-right" }, [
-                  _vm._v(_vm._s(props.item.type))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-xs-right" }, [
-                  _vm._v(_vm._s(props.item.carbs))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-xs-right" }, [
-                  _vm._v(_vm._s(props.item.protein))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-xs-right" }, [
-                  _vm._v(_vm._s(props.item.iron))
-                ])
-              ]
-            }
-          }
-        ])
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
+module.exports={render:function(){},staticRenderFns:[]}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
@@ -73634,7 +73595,11 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "container" },
-    [_c("item_list", { attrs: { items: _vm.items } })],
+    [
+      _c("span", [_vm._v("teste")]),
+      _vm._v(" "),
+      _c("item-list", { attrs: { items: _vm.items } })
+    ],
     1
   )
 }

@@ -37,10 +37,12 @@ Vue.use(Vuetify);
 import "vuetify/dist/vuetify.min.css";
 
 const item = Vue.component("item", require("./components/items/item.vue"));
+const item_list = Vue.component("item-list", require("./components/items/itemList.vue"));
 
 const routes = [{
     path: "/items",
-    component: item
+    component: item,
+    item_list
 }];
 
 const router = new VueRouter({
@@ -50,8 +52,11 @@ const router = new VueRouter({
 window.Vue = require("vue");
 const app = new Vue({
     el: "#app",
-    data: {
-        title: "Restaurant Management"
+    data() {
+        return {
+            title: "Restaurant Management",
+            user: null
+        }
     },
     router
 });
