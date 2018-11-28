@@ -15,7 +15,7 @@ class ItemControllerAPI extends Controller
      */
     public function index()
     {
-        return ItemResource::Collection(Item::select('name', 'type', 'description', 'photo_url')->orderBy('name', 'ASC')->get());
+        return ItemResource::Collection(Item::select('name', 'type', 'price', 'description', 'photo_url')->orderBy('name', 'ASC')->get());
     }
 
     /**
