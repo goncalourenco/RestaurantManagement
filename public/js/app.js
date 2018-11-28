@@ -73576,9 +73576,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   props: ["items"],
   methods: {
-    urlToImage: function urlToImage(item) {
-      return "/storage/items/" + item.photo_url;
-    },
     capitalizeFirstLetter: function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -73665,7 +73662,7 @@ var render = function() {
                   [
                     _c("v-img", {
                       attrs: {
-                        src: _vm.urlToImage(items.item),
+                        src: items.item.photo_url,
                         "max-width": 400,
                         "max-height": 400
                       }

@@ -16,7 +16,7 @@
         <td class="text-xs-left">{{ items.item.description }}</td>
         <td class="text-xs-left">{{ items.item.price }}</td>
         <td class="text-xs-left">
-          <v-img :src="urlToImage(items.item)" :max-width="400" :max-height="400"></v-img>
+          <v-img :src="items.item.photo_url" :max-width="400" :max-height="400"></v-img>
         </td>
       </template>
     </v-data-table>
@@ -44,9 +44,6 @@ export default {
   },
   props: ["items"],
   methods: {
-    urlToImage: function(item) {
-      return "/storage/items/" + item.photo_url;
-    },
     capitalizeFirstLetter: function(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
