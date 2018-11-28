@@ -73500,7 +73500,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -73560,18 +73559,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      search: "",
+      headers: [{
+        text: "Item",
+        align: "left",
+        sortable: true,
+        value: "name"
+      }, { text: "Type", value: "type" }, { text: "Description", value: "description", align: "left" }, { text: "Price (€)", value: "price", align: "left" }, { text: "Image", value: "image", align: "left" }]
+    };
   },
 
   props: ["items"],
   methods: {
     urlToImage: function urlToImage(item) {
-      return "/storage/items/" + item.photo_url + ".jpg";
+      return "/storage/items/" + item.photo_url;
     }
   },
   mounted: function mounted() {
@@ -73591,50 +73596,86 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
-      _vm._l(_vm.items, function(item, index) {
-        return [
+      _c(
+        "v-card",
+        [
           _c(
-            "v-flex",
-            { key: index, attrs: { xs12: "", sm6: "", "offset-sm3": "" } },
+            "v-card-title",
             [
-              _c(
-                "v-card",
-                [
-                  _c("v-img", {
-                    attrs: { src: _vm.urlToImage(item), "aspect-ratio": "2.75" }
-                  }),
-                  _vm._v(" "),
-                  _c("v-card-title", { attrs: { "primary-title": "" } }, [
-                    _c("div", [
-                      _c("h2", { staticClass: "headline mb-0" }, [
-                        _vm._v(_vm._s(item.name))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(item.type) +
-                            "\n              "
-                        ),
-                        _c("br"),
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(item.description) +
-                            "\n            "
-                        )
-                      ])
-                    ])
-                  ])
-                ],
-                1
-              )
+              _vm._v("Item List\n      "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  "append-icon": "search",
+                  label: "Search",
+                  "single-line": "",
+                  "hide-details": ""
+                },
+                model: {
+                  value: _vm.search,
+                  callback: function($$v) {
+                    _vm.search = $$v
+                  },
+                  expression: "search"
+                }
+              })
             ],
             1
           )
-        ]
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: { headers: _vm.headers, items: _vm.items, search: _vm.search },
+        scopedSlots: _vm._u([
+          {
+            key: "items",
+            fn: function(items) {
+              return [
+                _c("td", [_vm._v(_vm._s(items.item.name))]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-right" }, [
+                  _vm._v(_vm._s(items.item.type))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(items.item.description))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(items.item.price))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  { staticClass: "text-xs-left" },
+                  [
+                    _c("v-img", {
+                      attrs: {
+                        src: _vm.urlToImage(items.item),
+                        "max-width": 400,
+                        "max-height": 400
+                      }
+                    })
+                  ],
+                  1
+                )
+              ]
+            }
+          }
+        ])
       })
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
@@ -73658,11 +73699,7 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "container" },
-    [
-      _c("span", [_vm._v("teste")]),
-      _vm._v(" "),
-      _c("item-list", { attrs: { items: _vm.items } })
-    ],
+    [_c("item-list", { attrs: { items: _vm.items } })],
     1
   )
 }

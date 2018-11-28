@@ -15,7 +15,7 @@ class ItemControllerAPI extends Controller
      */
     public function index()
     {
-        return ItemResource::Collection(Item::all());
+        return ItemResource::Collection(Item::orderBy('name', 'ASC')->get());
     }
 
     /**

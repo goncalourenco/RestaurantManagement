@@ -1,38 +1,50 @@
 <template>
   <div class="container">
-    <template v-for="(item, index) in items" style="margin-bottom: 5px">
-      <v-flex xs12 sm6 offset-sm3 v-bind:key="index">
-        <v-card>
-          <v-img :src="urlToImage(item)" aspect-ratio="2.75"></v-img>
-
-          <v-card-title primary-title>
-            <div>
-              <h2 class="headline mb-0">{{item.name}}</h2>
-              <div>
-                {{item.type}}
-                <br>
-                {{item.description}}
-              </div>
-            </div>
-          </v-card-title>
-          <!--<v-card-actions>
-            <v-btn flat color="orange">Share</v-btn>
-            <v-btn flat color="orange">Explore</v-btn>
-          </v-card-actions>-->
-        </v-card>
-      </v-flex>
-    </template>
+    <v-card>
+      <v-card-title>Item List
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+      </v-card-title>
+    </v-card>
+    <v-data-table :headers="headers" :items="items" class="elevation-1" :search="search">
+      <template slot="items" slot-scope="items">
+        <td>{{ items.item.name }}</td>
+        <td class="text-xs-right">{{ items.item.type }}</td>
+        <td class="text-xs-left">{{ items.item.description }}</td>
+        <td class="text-xs-left">{{ items.item.price }}</td>
+        <td class="text-xs-left">
+          <v-img :src="urlToImage(items.item)" :max-width="400" :max-height="400"></v-img>
+        </td>
+      </template>
+    </v-data-table>
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      search: "",
+      headers: [
+        {
+          text: "Item",
+          align: "left",
+          sortable: true,
+          value: "name"
+        },
+        { text: "Type", value: "type" },
+        { text: "Description", value: "description", align: "left" },
+        { text: "Price (€)", value: "price", align: "left" },
+        { text: "Image", value: "image", align: "left" }
+      ]
+    };
   },
   props: ["items"],
   methods: {
     urlToImage: function(item) {
-      return "/storage/items/" + item.photo_url + ".jpg";
+      return "/storage/items/" + item.photo_url;
     }
   },
   mounted() {

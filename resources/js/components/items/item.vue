@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <span>teste</span>
     <item-list :items="items"></item-list>
   </div>
 </template>

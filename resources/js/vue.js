@@ -6,9 +6,13 @@ Vue.use(VueRouter);
 const item = Vue.component('item', require('./components/item.vue'));
 
 const routes = [{
-    path: '/items',
-    component: item
-}]
+        path: '/items',
+        component: item
+    },
+    {
+        path: '/'
+    }
+]
 
 const router = new VueRouter({
     routes: routes
