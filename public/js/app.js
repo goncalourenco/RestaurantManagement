@@ -73577,6 +73577,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   methods: {
     urlToImage: function urlToImage(item) {
       return "/storage/items/" + item.photo_url;
+    },
+    capitalizeFirstLetter: function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     }
   },
   mounted: function mounted() {
@@ -73644,7 +73647,7 @@ var render = function() {
                 _c("td", [_vm._v(_vm._s(items.item.name))]),
                 _vm._v(" "),
                 _c("td", { staticClass: "text-xs-right" }, [
-                  _vm._v(_vm._s(items.item.type))
+                  _vm._v(_vm._s(_vm.capitalizeFirstLetter(items.item.type)))
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "text-xs-left" }, [

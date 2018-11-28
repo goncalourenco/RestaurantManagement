@@ -12,7 +12,7 @@
     <v-data-table :headers="headers" :items="items" class="elevation-1" :search="search">
       <template slot="items" slot-scope="items">
         <td>{{ items.item.name }}</td>
-        <td class="text-xs-right">{{ items.item.type }}</td>
+        <td class="text-xs-right">{{ capitalizeFirstLetter(items.item.type) }}</td>
         <td class="text-xs-left">{{ items.item.description }}</td>
         <td class="text-xs-left">{{ items.item.price }}</td>
         <td class="text-xs-left">
@@ -45,6 +45,9 @@ export default {
   methods: {
     urlToImage: function(item) {
       return "/storage/items/" + item.photo_url;
+    },
+    capitalizeFirstLetter: function(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     }
   },
   mounted() {
