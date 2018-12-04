@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <v-card>
+    <!--<v-card>
       <v-card-title>Item List
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -19,7 +19,24 @@
           <v-img :src="items.item.photo_url" :max-width="400" :max-height="400"></v-img>
         </td>
       </template>
-    </v-data-table>
+    </v-data-table>-->
+    <div class="row">
+      <div v-for="item in items" v-bind:key="item.id" class="col-3 mt-3">
+        <div class="card h-100">
+          <img
+            class="card-img-top"
+            style="max-height:185px;width:auto;"
+            :src="item.photo_url"
+            alt="Card image cap"
+          >
+          <div class="card-body">
+            <h5 class="card-title">{{item.name}}</h5>
+            <p class="card-text">{{item.description}}</p>
+            <p class="card-text">{{ capitalizeFirstLetter(item.type) }} - {{item.price}}€</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

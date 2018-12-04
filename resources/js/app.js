@@ -37,13 +37,17 @@ Vue.use(Vuetify);
 import "vuetify/dist/vuetify.min.css";
 
 const item = Vue.component("item", require("./components/items/item.vue"));
-const item_list = Vue.component("item-list", require("./components/items/itemList.vue"));
+const worker = Vue.component("worker", require("./components/worker/worker.vue"));
 
 const routes = [{
-    path: "/items",
-    component: item,
-    item_list
-}];
+        path: "/items",
+        component: item
+    },
+    {
+        path: "/worker",
+        component: worker
+    }
+];
 
 const router = new VueRouter({
     routes: routes

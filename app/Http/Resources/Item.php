@@ -18,6 +18,7 @@ class Item extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'type' => $this->type,
+            'price' => $this->price,
             'photo_url' => '/storage/items/' . $this->photo_url
         ];
     }

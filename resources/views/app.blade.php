@@ -3,7 +3,6 @@
 @section('title', 'Restaurant Management')
 
 @section('content')
-
 <v-app> 
     <v-toolbar app>
             <v-toolbar-side-icon></v-toolbar-side-icon>
