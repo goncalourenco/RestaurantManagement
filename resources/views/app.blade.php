@@ -3,11 +3,12 @@
 @section('title', 'Restaurant Management')
 
 @section('content')
-
 <v-app> 
     <v-toolbar app>
             <v-toolbar-side-icon></v-toolbar-side-icon>
-            <v-toolbar-title to="/">@{{title}}</v-toolbar-title>
+            <v-toolbar-title>
+                <router-link to="/">Restaurant Management</router-link>
+            </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
             <template v-if="user==null">
