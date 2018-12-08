@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\User as UserResource;
 use App\User;
 use Illuminate\Http\Request;
+use Response;
+use App\Rules\OldPassoword as OldPasswordRule;
+
 
 class UserControllerAPI extends Controller
 {
@@ -15,6 +18,27 @@ class UserControllerAPI extends Controller
     public function index()
     {
         //return UserResource::collection(User::pa)
+    }
+
+    public function changePassword(Request $request, $id){
+        $request->validate([
+            'old_password' => ['required', new OldPasswordRule],
+            'password' => 'required|min:3|diffrrent:old_password|confirmed',
+            'password_confirmation' => 'required|same:password'
+        ]);
+
+        $user = User::findOrFail($id);
+        
+        if($request->user() && $request->user()->id != $user->id){
+            return Response::json([
+                'unauthorized' => 'Unauthorized access'
+            ], 401);
+        }
+
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+
+        return new UserResource($user);
     }
 
     public function myProfile(Request $request)
