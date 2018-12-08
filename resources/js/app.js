@@ -29,7 +29,7 @@ window.Vue = require("vue");
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+import store from './stores/global-store';
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 import Vuetify from "vuetify";
@@ -38,15 +38,30 @@ import "vuetify/dist/vuetify.min.css";
 
 const item = Vue.component("item", require("./components/items/item.vue"));
 const worker = Vue.component("worker", require("./components/worker/worker.vue"));
+const login = Vue.component("login", require("./components/auth/login.vue"));
+const logout = Vue.component('logout', require('./components/auth/logout.vue'));
 
 const routes = [{
         path: "/items",
         component: item
     },
     {
+        path: '/',
+        redirect: '/items'
+    },
+    {
         path: "/worker",
         component: worker
-    }
+    },
+    {
+        path: "/login",
+        component: login
+    },
+    {
+        path: '/logout',
+        component: logout,
+        name: 'logout'
+    },
 ];
 
 const router = new VueRouter({
@@ -59,8 +74,24 @@ const app = new Vue({
     data() {
         return {
             title: "Restaurant Management",
-            user: null
         }
     },
-    router
+    router,
+    store,
+    created() {
+        this.$store.commit('loadTokenAndUserFromSession');
+    },
+    methods: {
+        logout() {
+            this.showMessage = false;
+            axios.post('api/logout')
+                .then(response => {
+                    this.$store.commit('clearUserAndToken');
+                })
+                .catch(error => {
+                    this.$store.commit('clearUserAndToken');
+                    console.log(error);
+                })
+        }
+    }
 });

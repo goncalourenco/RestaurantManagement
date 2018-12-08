@@ -14,9 +14,13 @@ class UserControllerAPI extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        //return UserResource::collection(User::pa)
     }
 
+    public function myProfile(Request $request)
+    {
+        return new UserResource($request->user());
+    }
     /**
      * Store a newly created resource in storage.
      *
