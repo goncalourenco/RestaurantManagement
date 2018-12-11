@@ -45,7 +45,8 @@ const logout = Vue.component("logout", require("./components/auth/logout.vue"));
 
 const routes = [{
         path: "/items",
-        component: item
+        component: item,
+        name: "items"
     },
     {
         path: '/',
@@ -53,20 +54,32 @@ const routes = [{
     },
     {
         path: "/worker",
-        component: worker
+        component: worker,
+        name: "worker"
     },
     {
         path: "/login",
-        component: login
+        component: login,
+        name: "login"
     },
     {
         path: "/logout",
-        component: logout
+        component: logout,
+        name: "logout"
     }
 ];
 
 const router = new VueRouter({
     routes: routes,
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.name == "worker") {
+        next('/login');
+    } else if (to.name == "logout" && !store.state.user) {
+        next('/login');
+    }
+    next();
 });
 
 window.Vue = require("vue");

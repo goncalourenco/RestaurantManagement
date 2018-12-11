@@ -63,9 +63,7 @@ export default {
       });
     }
   },
-  mounted() {
-    console.log("OJIJKLfKLJSDFSDLJKFSDLJKFSDFLJKSDFKLJ");
-    console.log(this.items);
-  }
+  mounted() {}
 };
 </script>
+
