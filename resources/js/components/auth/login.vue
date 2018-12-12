@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import alertMessage from "./alertMessage";
+import alertMessage from "../alertMessage";
 export default {
   data: function() {
     return {

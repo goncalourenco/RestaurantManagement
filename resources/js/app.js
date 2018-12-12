@@ -36,14 +36,17 @@ import Vuetify from "vuetify";
 Vue.use(Vuetify);
 import "vuetify/dist/vuetify.min.css";
 
+import menuToolbar from './components/toolbar.vue';
+
 const item = Vue.component("item", require("./components/items/item.vue"));
 const worker = Vue.component("worker", require("./components/worker/worker.vue"));
 const login = Vue.component("login", require("./components/auth/login.vue"));
-const logout = Vue.component('logout', require('./components/auth/logout.vue'));
+const logout = Vue.component("logout", require("./components/auth/logout.vue"));
 
 const routes = [{
         path: "/items",
-        component: item
+        component: item,
+        name: "items"
     },
     {
         path: '/',
@@ -51,21 +54,32 @@ const routes = [{
     },
     {
         path: "/worker",
-        component: worker
+        component: worker,
+        name: "worker"
     },
     {
         path: "/login",
-        component: login
+        component: login,
+        name: "login"
     },
     {
-        path: '/logout',
+        path: "/logout",
         component: logout,
-        name: 'logout'
-    },
+        name: "logout"
+    }
 ];
 
 const router = new VueRouter({
-    routes: routes
+    routes: routes,
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.name == "worker") {
+        next('/login');
+    } else if (to.name == "logout" && !store.state.user) {
+        next('/login');
+    }
+    next();
 });
 
 window.Vue = require("vue");
@@ -74,6 +88,17 @@ const app = new Vue({
     data() {
         return {
             title: "Restaurant Management",
+            items: [{
+                    name: "My profile",
+                    icon: "home",
+                    link: "/worker"
+                },
+                {
+                    name: "Logout",
+                    icon: "logout",
+                    link: "/logout"
+                }
+            ]
         }
     },
     router,
@@ -81,17 +106,27 @@ const app = new Vue({
     created() {
         this.$store.commit('loadTokenAndUserFromSession');
     },
+    components: {
+        'menu-toolbar': menuToolbar
+    },
     methods: {
         logout() {
             this.showMessage = false;
-            axios.post('api/logout')
+            axios
+                .post("api/logout")
                 .then(response => {
-                    this.$store.commit('clearUserAndToken');
+                    this.$store.commit("clearUserAndToken");
                 })
                 .catch(error => {
-                    this.$store.commit('clearUserAndToken');
+                    this.$store.commit("clearUserAndToken");
                     console.log(error);
-                })
+                });
+        },
+        route(path) {
+            this.$router.push({
+                path: "/items"
+            });
         }
-    }
+    },
+
 });

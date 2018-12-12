@@ -18,6 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::get('users', 'UserControllerAPI@index');
 Route::get('items', 'ItemControllerAPI@index');
-Route::post('login', 'LoginControllerAPI@login');
-Route::middleware('auth:api')->get('users/me', 'UserControllerAPI@myProfile');
+Route::post('login', 'LoginControllerAPI@login')->name('login');
+Route::middleware('auth:api')->get('users/me', 'UserControllerAPI@myUserDetails');
 Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
+
+Route::middleware('auth:api')->patch('users/password/{id}', 'UserControllerAPI@changePassword');
+Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
