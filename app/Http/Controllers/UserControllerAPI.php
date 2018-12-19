@@ -5,8 +5,10 @@ use App\Http\Resources\User as UserResource;
 use App\User;
 use Illuminate\Http\Request;
 use Response;
-use App\Rules\OldPassoword as OldPasswordRule;
-
+use App\Rules\OldPassword;
+use App\Rules\DifferentUsername;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserControllerAPI extends Controller
 {
@@ -22,8 +24,8 @@ class UserControllerAPI extends Controller
 
     public function changePassword(Request $request, $id){
         $request->validate([
-            'old_password' => ['required', new OldPasswordRule],
-            'password' => 'required|min:3|diffrrent:old_password|confirmed',
+            'old_password' => ['required', new OldPassword],
+            'password' => 'required|min:3|different:old_password|confirmed',
             'password_confirmation' => 'required|same:password'
         ]);
 
@@ -66,7 +68,7 @@ class UserControllerAPI extends Controller
     {
         //
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -78,10 +80,10 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
             'name' => 'required|min:3|regex:/^[A-z][A-z\s\.\']+$/',
-            'username' => 'required|unique:users,username|regex:/(^([a-zA-Z]+)(\d+)?$)/u',
+            'username' => ['required','regex:/(^([a-zA-Z]+)(\d+)?$)/u', new DifferentUsername],
             'photo' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
-
+//TODO rule
         $user = User::findOrFail($id);
 
         if (Auth::guard('api')->user()->id != $user->id){        

@@ -42,6 +42,7 @@ const item = Vue.component("item", require("./components/items/item.vue"));
 const worker = Vue.component("worker", require("./components/worker/worker.vue"));
 const login = Vue.component("login", require("./components/auth/login.vue"));
 const logout = Vue.component("logout", require("./components/auth/logout.vue"));
+const userDashboard = Vue.component("userDashboard", require("./components/worker/dashboard.vue"));
 
 const routes = [{
         path: "/items",
@@ -50,7 +51,8 @@ const routes = [{
     },
     {
         path: '/',
-        redirect: '/items'
+        redirect: '/items',
+        name: "root"
     },
     {
         path: "/worker",
@@ -66,6 +68,11 @@ const routes = [{
         path: "/logout",
         component: logout,
         name: "logout"
+    },
+    {
+        path: "/dashboard",
+        component: userDashboard,
+        name: "dashboard"
     }
 ];
 
@@ -74,10 +81,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.name == "worker") {
-        next('/login');
-    } else if (to.name == "logout" && !store.state.user) {
-        next('/login');
+    if (((to.name != "items" || to.name != "root") && sessionStorage.getItem('user') == null) && to.name != "login") {
+        next("/login");
     }
     next();
 });
