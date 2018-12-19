@@ -53,25 +53,21 @@ export default {
       });
     },
     editUser: function(user) {
+      console.log("Edit user");
+      console.log(user);
       this.currentUser = user;
       this.editingUser = true;
       this.showSuccess = false;
-      console.log(user);
     },
     changePassword: function(user) {
       this.currentUser = user;
       this.changingPassword = true;
       console.log("ChangePassowrd");
     },
-    deleteUser: function(user) {
-      axios.delete("api/users/" + user.id).then(response => {
-        this.showSuccess = true;
-        this.successMessage = "User Deleted";
-        this.getUsers();
-      });
-    },
     savedUser: function() {
       this.currentUser = null;
+      this.editingUser = false;
+      this.changingPassword = false;
       this.showSuccess = true;
       this.successMessage = "User Saved";
     },

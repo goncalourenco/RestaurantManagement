@@ -24,6 +24,7 @@
                 <v-icon>home</v-icon>My Profile
               </v-list-tile-title>
             </v-list-tile>
+
             <v-list-tile to="/logout">
               <v-list-tile-title>
                 <v-icon>logout</v-icon>Logout

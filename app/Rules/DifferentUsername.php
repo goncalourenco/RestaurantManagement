@@ -5,9 +5,8 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
-class OldPassword implements Rule
+class DifferentUsername implements Rule
 {
     /**
      * Create a new rule instance.
@@ -28,8 +27,15 @@ class OldPassword implements Rule
      */
     public function passes($attribute, $value)
     {
-        $user = Auth::guard('api')->user();
-        return Hash::check($value, $user->password);
+        $authedUser = Auth::guard('api')->user();
+        $users = User::all();
+    
+        foreach($users as $user){
+            if ($user->id != $authedUser->id && $user->username==$value){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -39,6 +45,6 @@ class OldPassword implements Rule
      */
     public function message()
     {
-        return 'Incorrect old password';
+        return 'The username has already been taken.';
     }
 }

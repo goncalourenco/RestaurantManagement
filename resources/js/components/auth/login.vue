@@ -63,7 +63,7 @@ export default {
         .then(response => {
           this.$store.commit("setToken", response.data.token.access_token);
           return axios.get("api/users/me");
-          this.$router.push({ path: "/items" });
+          this.$router.push({ path: "/dashboard" });
         })
         .then(response => {
           console.log(response.data.data);
