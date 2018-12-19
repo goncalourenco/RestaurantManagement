@@ -24956,7 +24956,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(14);
-module.exports = __webpack_require__(79);
+module.exports = __webpack_require__(82);
 
 
 /***/ }),
@@ -25017,6 +25017,7 @@ var item = Vue.component("item", __webpack_require__(52));
 var worker = Vue.component("worker", __webpack_require__(58));
 var login = Vue.component("login", __webpack_require__(70));
 var logout = Vue.component("logout", __webpack_require__(76));
+var cookComponent = Vue.component("cook", __webpack_require__(79));
 
 var routes = [{
     path: "/items",
@@ -25037,6 +25038,10 @@ var routes = [{
     path: "/logout",
     component: logout,
     name: "logout"
+}, {
+    path: "/cook",
+    component: cookComponent,
+    name: "cook"
 }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
@@ -25048,7 +25053,9 @@ router.beforeEach(function (to, from, next) {
         next('/login');
     } else if (to.name == "logout" && !__WEBPACK_IMPORTED_MODULE_0__stores_global_store__["a" /* default */].state.user) {
         next('/login');
-    }
+    } /*else if (to.name == "cook" && !store.state.user && store.state.user.type != "cook"){
+         next('/login');
+      }*/
     next();
 });
 
@@ -76502,6 +76509,107 @@ if (false) {
 
 /***/ }),
 /* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(80)
+/* template */
+var __vue_template__ = __webpack_require__(81)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/cook/cook.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5297a874", Component.options)
+  } else {
+    hotAPI.reload("data-v-5297a874", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component mounted.');
+        this.getOrders();
+    },
+    data: function data() {
+        return {
+            orders: []
+        };
+    },
+
+    methods: {
+        getOrders: function getOrders() {
+            var _this = this;
+
+            axios.get("api/orders").then(function (response) {
+                _this.orders = response.data.data;
+                console.log(response.data.data);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5297a874", module.exports)
+  }
+}
+
+/***/ }),
+/* 82 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

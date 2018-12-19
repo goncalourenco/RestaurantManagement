@@ -42,6 +42,7 @@ const item = Vue.component("item", require("./components/items/item.vue"));
 const worker = Vue.component("worker", require("./components/worker/worker.vue"));
 const login = Vue.component("login", require("./components/auth/login.vue"));
 const logout = Vue.component("logout", require("./components/auth/logout.vue"));
+const cookComponent = Vue.component("cook", require("./components/cook/cook.vue"));
 
 const routes = [{
         path: "/items",
@@ -66,6 +67,11 @@ const routes = [{
         path: "/logout",
         component: logout,
         name: "logout"
+    },
+    {
+        path: "/cook",
+        component: cookComponent,
+        name: "cook"
     }
 ];
 
@@ -78,12 +84,14 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else if (to.name == "logout" && !store.state.user) {
         next('/login');
-    }
+    }/*else if (to.name == "cook" && !store.state.user && store.state.user.type != "cook"){
+        next('/login');
+    }*/
     next();
 });
 
 window.Vue = require("vue");
-const app = new Vue({
+const app = new Vue({ 
     el: "#app",
     data() {
         return {
