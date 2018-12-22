@@ -10,7 +10,7 @@ use App\User;
 define('YOUR_SERVER_URL', 'http://prj.dad');
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
-define('CLIENT_SECRET','7b53U6SfGRpbvf50hOm2xT0TJRZqWZWsrxhQwum1');
+define('CLIENT_SECRET','SOnUGjapt1RBJMVHVkvwIldqRyx6We21Ru9sAV5f');
 
 class LoginControllerAPI extends Controller
 {

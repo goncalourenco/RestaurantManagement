@@ -44,6 +44,8 @@ const worker = Vue.component("worker", require("./components/worker/worker.vue")
 const login = Vue.component("login", require("./components/auth/login.vue"));
 const logout = Vue.component("logout", require("./components/auth/logout.vue"));
 const waiterDashboard = Vue.component("waiterDashboard", require("./components/waiter/dashboard.vue"));
+const cookComponent = Vue.component("cook", require("./components/cook/cook.vue"));
+const userDashboard = Vue.component("userDashboard", require("./components/worker/dashboard.vue"));
 
 const routes = [{
         path: "/items",
@@ -71,6 +73,14 @@ const routes = [{
         name: "logout"
     },
     {
+        path: "/cook",
+        component: cookComponent,
+        name: "cook"
+    },
+    {
+        path: "/dashboard",
+        component: userDashboard,
+        name: "dashboard"
         path: "/waiter",
         component: waiterDashboard,
         name: "waiterDashboard"
@@ -92,7 +102,7 @@ router.beforeEach((to, from, next) => {
 });
 
 window.Vue = require("vue");
-const app = new Vue({
+const app = new Vue({ 
     el: "#app",
     data() {
         return {
