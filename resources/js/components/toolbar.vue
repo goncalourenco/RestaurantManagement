@@ -11,6 +11,7 @@
         <v-btn style="text-transform: none !important;" flat to="/login">Login</v-btn>
       </template>
       <template v-if="this.$store.state.user">
+        <end-start-shift></end-start-shift>
         <v-menu bottom offset-y icon>
           <v-btn
             style="text-transform: none !important;"
@@ -24,7 +25,11 @@
                 <v-icon>home</v-icon>My Profile
               </v-list-tile-title>
             </v-list-tile>
-
+            <v-list-tile to="/waiter" v-if="this.$store.state.user.type=='waiter'">
+              <v-list-tile-title>
+                <v-icon>dashboard</v-icon>Waiter Dashboard
+              </v-list-tile-title>
+            </v-list-tile>
             <v-list-tile to="/logout">
               <v-list-tile-title>
                 <v-icon>logout</v-icon>Logout
@@ -41,6 +46,7 @@
 </template>
 
 <script>
+import endStartShift from "./worker/endStartShift.vue";
 export default {
   mounted() {
     console.log("Component mounted.");
@@ -64,7 +70,9 @@ export default {
       });
     }
   },
-  mounted() {}
+  components: {
+    endStartShift
+  }
 };
 </script>
 

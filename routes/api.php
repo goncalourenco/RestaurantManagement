@@ -24,3 +24,13 @@ Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
 
 Route::middleware('auth:api')->patch('users/password/{id}', 'UserControllerAPI@changePassword');
 Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
+
+
+//US 6
+Route::middleware('auth:api')->patch('users/{id}/endshift', 'UserControllerAPI@endShift');
+Route::middleware('auth:api')->patch('users/{id}/startshift', 'UserControllerAPI@startShift');
+
+
+//US 12
+Route::middleware(['auth:api', 'isWaiter'])->post('meals/create', "MealControllerAPI@store");
+Route::middleware(['auth:api', 'isWaiter'])->get('meals/availableTables', "MealControllerAPI@availableTables");

@@ -49,12 +49,12 @@ export default {
     getUserInfo: function() {
       axios.get("api/users/me").then(response => {
         this.user = response.data.data;
-        console.log(response.data.data);
+        //console.log(response.data.data);
       });
     },
     editUser: function(user) {
-      console.log("Edit user");
-      console.log(user);
+      //console.log("Edit user");
+      //console.log(user);
       this.currentUser = user;
       this.editingUser = true;
       this.showSuccess = false;

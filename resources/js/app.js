@@ -29,6 +29,7 @@ window.Vue = require("vue");
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+//import moment from './moment.js';
 import store from './stores/global-store';
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
@@ -42,7 +43,7 @@ const item = Vue.component("item", require("./components/items/item.vue"));
 const worker = Vue.component("worker", require("./components/worker/worker.vue"));
 const login = Vue.component("login", require("./components/auth/login.vue"));
 const logout = Vue.component("logout", require("./components/auth/logout.vue"));
-const userDashboard = Vue.component("userDashboard", require("./components/worker/dashboard.vue"));
+const waiterDashboard = Vue.component("waiterDashboard", require("./components/waiter/dashboard.vue"));
 
 const routes = [{
         path: "/items",
@@ -70,9 +71,9 @@ const routes = [{
         name: "logout"
     },
     {
-        path: "/dashboard",
-        component: userDashboard,
-        name: "dashboard"
+        path: "/waiter",
+        component: waiterDashboard,
+        name: "waiterDashboard"
     }
 ];
 
@@ -83,6 +84,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (((to.name != "items" || to.name != "root") && sessionStorage.getItem('user') == null) && to.name != "login") {
         next("/login");
+    }
+    else if (to.name == "waiterDashboard" && sessionStorage.getItem("user").type!="waiter"){
+        next("/items");
     }
     next();
 });
@@ -112,7 +116,7 @@ const app = new Vue({
         this.$store.commit('loadTokenAndUserFromSession');
     },
     components: {
-        'menu-toolbar': menuToolbar
+        'menu-toolbar': menuToolbar,
     },
     methods: {
         logout() {

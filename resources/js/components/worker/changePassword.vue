@@ -1,7 +1,8 @@
 <template>
   <v-form>
     <h1>Change Password</h1>
-    <alert-message></alert-message>
+    <alert-message :showAlert="showErrorMessage" :message="errorMessage" :typeOfMsg="typeOfMsg"></alert-message>
+
     <v-text-field
       v-model="oldPassword"
       :append-icon="show ? 'visibility_off' : 'visibility'"
@@ -59,17 +60,21 @@ export default {
       confirmPassword: "",
       oldPassword: "",
       showErrorMessage: "",
-      errorMessage: ""
+      errorMessage: "",
+      typeOfMsg: "",
+      errors: ""
     };
   },
   props: ["user"],
   methods: {
     saveUser: function() {
+      this.showErrorMessage = false;
       let passwords = {
         old_password: this.oldPassword,
         password: this.newPassword,
         password_confirmation: this.confirmPassword
       };
+      console.log(passwords);
       axios
         .patch("api/users/password/" + this.user.id, passwords)
         .then(response => {
@@ -80,7 +85,11 @@ export default {
           this.$emit("user-saved", this.user);
         })
         .catch(error => {
-          console.log(error);
+          console.log(error.response.data.errors);
+          this.typeOfMsg = "error";
+          //this.showErrorMessage = true;
+          this.errors = error.response.data.errors;
+          //this.errorMessage = error.response.data.errors.old_password[0];
         });
     },
     cancelEdit: function() {

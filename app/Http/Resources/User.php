@@ -22,7 +22,7 @@ class User extends JsonResource
             'username' => $this->username,
             'photo_url' => '/storage/profiles/' . $this->photo_url,
             'last_shift_start' => $this->last_shift_start,
-            'last_shif_end' => $this->last_shift_end,
+            'last_shift_end' => $this->last_shift_end,
             'shift_active' => $this->shift_active,
         ];
     }

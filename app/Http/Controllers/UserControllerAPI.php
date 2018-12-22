@@ -118,4 +118,36 @@ class UserControllerAPI extends Controller
     {
         //
     }
+
+    public function endShift(Request $request, $id){
+        $user = User::findOrFail($id);
+        if (Auth::guard('api')->user()->id != $user->id){        
+            return Response::json([
+                'unauthorized' => 'Unauthorized access'
+            ], 401);
+        }
+        $user->shift_active=0;
+
+        $user->last_shift_end=$request->end_shift_date;
+
+        $user->save();
+
+        return new UserResource($user);
+    }
+
+    public function startShift(Request $request, $id){
+        $user = User::findOrFail($id);
+        if (Auth::guard('api')->user()->id != $user->id){        
+            return Response::json([
+                'unauthorized' => 'Unauthorized access'
+            ], 401);
+        }
+        $user->shift_active=1;
+
+        $user->last_shift_start=$request->start_shift_date;
+
+        $user->save();
+
+        return new UserResource($user);
+    }
 }
