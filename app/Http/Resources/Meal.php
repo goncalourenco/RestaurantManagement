@@ -18,11 +18,10 @@ class Meal extends JsonResource
             'id' => $this->id,
             'state' => $this->state,
             'table_number' => $this->table_number,
-            'responsible_waiter_id' => $this->responsible_waiter_id,
-            'responsible_waiter_name' => $this->waiter->name,
-            'total_price_preview' => $this->total_price_preview,
             'start' => $this->start,
             'end' => $this->end
+            'responsible_waiter_id' => $this->responsible_waiter_id,
+            'total_price_preview' => $this->total_price_preview,
         ];
     }
 }
