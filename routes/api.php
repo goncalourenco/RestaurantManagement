@@ -30,6 +30,8 @@ Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
 Route::middleware('auth:api')->patch('users/{id}/endshift', 'UserControllerAPI@endShift');
 Route::middleware('auth:api')->patch('users/{id}/startshift', 'UserControllerAPI@startShift');
 
+Route::middleware(['auth:api', 'isCook'])->get('cooks/orders', "OrderControllerAPI@getOrdersCook");
+
 
 //US 12
 Route::middleware(['auth:api', 'isWaiter'])->post('meals/create', "MealControllerAPI@store");

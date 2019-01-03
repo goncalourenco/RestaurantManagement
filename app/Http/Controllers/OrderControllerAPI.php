@@ -84,6 +84,14 @@ class OrderControllerAPI extends Controller
         return OrderResource::collection($orders);
     }
 
+    public function getOrdersCook(){
+        $user = auth()->user();
+        $orders = Order::whereIn('responsible_cook_id', array($user->id, null))
+                        ->whereIn("state", array('in preparation', 'confirmed'))
+                        ->orderBy('start', 'desc')->orderBy('state', 'desc')->paginate(10);
+        return OrderResource::collection($orders);
+    }
+
     public function getPreparedOrdersWaiter(){
         $user = auth()->user();
         $orders = Order::join('meals', 'orders.meal_id', '=', 'meals.id')
