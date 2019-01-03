@@ -15,12 +15,12 @@ class Meal extends Model
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'order_id');
+        return $this->hasMany(Order::class, 'meal_id');
     }
 
     public function orders_delivered()
     {
-        return $this->hasMany(Order::class, 'order_id')->where('state', 'delivered');
+        return $this->hasMany(Order::class, 'meal_id')->where('state', 'delivered');
     }
 
     public function table()

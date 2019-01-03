@@ -18,7 +18,11 @@ class Order extends JsonResource
             'id' => $this->id,
             'state' => $this->state,
             'item_id' => $this->item_id,
+            'item_name' => $this->item->name,
+            'item_price' => $this->item->price,
+            'item_type' => $this->item->type,
             'meal_id' => $this->meal_id,
+            'table_number' => $this->meal->table_number,
             'responsible_cook_id' => $this->responsible_cook_id,
             'start' => $this->start,
             'end' => $this->end

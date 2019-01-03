@@ -13,12 +13,12 @@ class Order extends Model
         'id','state','item_id','meal_id','responsible_cook_id','start','end'
    ];
 
-   public function cookers()
+   public function cooker()
    {
        return $this->belongsTo(User::class, 'responsible_cook_id');
    }
 
-   public function meals()
+   public function meal()
    {
        return $this->belongsTo(Meal::class, 'meal_id');
    }

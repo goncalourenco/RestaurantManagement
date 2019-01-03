@@ -70,6 +70,7 @@ export default {
       axios
         .patch("api/users/" + this.user.id + "/endshift/", data)
         .then(response => {
+          this.$store.commit("setUser", response.data.data);
           this.user = response.data.data;
           this.dateToUpdate = moment(this.user.last_shift_end);
         })

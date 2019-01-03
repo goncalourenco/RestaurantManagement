@@ -35,3 +35,22 @@ Route::middleware('auth:api')->patch('users/{id}/startshift', 'UserControllerAPI
 Route::middleware(['auth:api', 'isWaiter'])->post('meals/create', "MealControllerAPI@store");
 Route::middleware(['auth:api', 'isWaiter'])->get('meals/availableTables', "MealControllerAPI@availableTables");
 Route::middleware('auth:api')->get('orders', 'OrderControllerAPI@index');
+
+//US13
+Route::middleware(['auth:api', 'isWaiter'])->get('waiter/meals', "MealControllerAPI@getMealsWaiter");
+Route::middleware(['auth:api', 'isWaiter'])->post('orders/create', "OrderControllerAPI@store");
+
+//US14
+Route::middleware(['auth:api', 'isWaiter'])->get('waiter/orders', "OrderControllerAPI@getOrdersWaiter");
+
+//US15
+Route::middleware(['auth:api', 'isWaiter'])->delete('orders/{id}', "OrderControllerAPI@destroy");
+
+//US17
+Route::middleware(['auth:api', 'isWaiter'])->patch('order/{id}/status/', "OrderControllerAPI@changeStatus");
+
+//US19
+Route::middleware(['auth:api', 'isWaiter'])->get('meals/{id}/orders', "MealControllerAPI@getAllOrdersForMeal");
+
+//US20
+Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "MealControllerAPI@terminateOrder");
