@@ -30,9 +30,13 @@ Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
 Route::middleware('auth:api')->patch('users/{id}/endshift', 'UserControllerAPI@endShift');
 Route::middleware('auth:api')->patch('users/{id}/startshift', 'UserControllerAPI@startShift');
 
-Route::middleware(['auth:api', 'isCook'])->get('cooks/orders', "OrderControllerAPI@getOrdersCook");
+//US9
+Route::middleware(['auth:api', 'isCook'])->get('orders/cook/{id}', "OrderControllerAPI@getOrdersCook");
+Route::middleware(['auth:api', 'isCook'])->get('orders/unassigned', "OrderControllerAPI@getUnassignedOrders");
 
-
+//US11
+Route::middleware(['auth:api', 'isCook'])->patch('order/{id}/assign', "OrderControllerAPI@assignOrder");
+                                
 //US 12
 Route::middleware(['auth:api', 'isWaiter'])->post('meals/create', "MealControllerAPI@store");
 Route::middleware(['auth:api', 'isWaiter'])->get('meals/availableTables', "MealControllerAPI@availableTables");
@@ -49,10 +53,10 @@ Route::middleware(['auth:api', 'isWaiter'])->get('waiter/orders', "OrderControll
 Route::middleware(['auth:api', 'isWaiter'])->delete('orders/{id}', "OrderControllerAPI@destroy");
 
 //US17
-Route::middleware(['auth:api', 'isWaiter'])->patch('order/{id}/status/', "OrderControllerAPI@changeStatus");
+Route::middleware(['auth:api'])->patch('order/{id}/state/', "OrderControllerAPI@changeState");
 
 //US19
 Route::middleware(['auth:api', 'isWaiter'])->get('meals/{id}/orders', "MealControllerAPI@getAllOrdersForMeal");
 
 //US20
-Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "MealControllerAPI@terminateOrder");
+Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "MealControllerAPI@terminateMeal");

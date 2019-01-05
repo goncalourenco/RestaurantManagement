@@ -92,6 +92,8 @@ router.beforeEach((to, from, next) => {
         next("/login");
     } else if (to.name == "waiterDashboard" && sessionStorage.getItem("user").type != "waiter") {
         next("/items");
+    } else if (to.name == "cook" && sessionStorage.getItem("user").type != "cook") {
+        next("/items");
     }
     next();
 });

@@ -25107,6 +25107,8 @@ router.beforeEach(function (to, from, next) {
         next("/login");
     } else if (to.name == "waiterDashboard" && sessionStorage.getItem("user").type != "waiter") {
         next("/items");
+    } else if (to.name == "cook" && sessionStorage.getItem("user").type != "cook") {
+        next("/items");
     }
     next();
 });
@@ -74625,6 +74627,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -74970,6 +74977,24 @@ var render = function() {
                                   [
                                     _c("v-icon", [_vm._v("dashboard")]),
                                     _vm._v("Waiter Dashboard\n            ")
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        this.$store.state.user.type == "cook"
+                          ? _c(
+                              "v-list-tile",
+                              { attrs: { to: "/cook" } },
+                              [
+                                _c(
+                                  "v-list-tile-title",
+                                  [
+                                    _c("v-icon", [_vm._v("dashboard")]),
+                                    _vm._v("Cook Dashboard\n            ")
                                   ],
                                   1
                                 )
@@ -77181,7 +77206,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _data = {
               state: "confirmed"
             };
-            axios.patch("/api/order/" + _this5.newMeal.id + "/status", _data).then(function (response) {
+            axios.patch("/api/order/" + _this5.newMeal.id + "/state", _data).then(function (response) {
               _this5.newMeal = response.data.data;
               _this5.getMyOrders();
             });
@@ -77204,11 +77229,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     deliverOrder: function deliverOrder(order) {
+      var _this7 = this;
+
       var data = {
         state: "delivered"
       };
-      axios.patch("/api/order/" + order.id + "/status", data).then(function (response) {
-        Object.assign(order, response.data.data);
+      axios.patch("/api/order/" + order.id + "/state", data).then(function (response) {
+        _this7.getMyOrders();
       }).catch(function (error) {
         console.log(error);
       });
@@ -77219,10 +77246,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.getOrdersForMeal(meal.id);
     },
     getOrdersForMeal: function getOrdersForMeal(id) {
-      var _this7 = this;
+      var _this8 = this;
 
       axios.get("api/meals/" + id + "/orders").then(function (response) {
-        _this7.ordersForMeal = response.data.data;
+        _this8.ordersForMeal = response.data.data;
       }).catch(function (error) {
         console.log(error);
       });
@@ -77230,8 +77257,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     closeSummaryDialog: function closeSummaryDialog() {
       this.showMealDetails = false;
     },
-    terminateOrder: function terminateOrder() {
-      var _this8 = this;
+    terminateMeal: function terminateMeal() {
+      var _this9 = this;
 
       var order = void 0;
       var allDelivered = true;
@@ -77243,10 +77270,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!allDelivered) {
         if (confirm("Not all orders are delivered. If you continue all pending orders will be close")) {
           axios.patch("api/meals/" + this.selectedMeal.id + "/terminate").then(function (response) {
-            _this8.selectedMeal = response.data.data;
-            _this8.showMealDetails = false;
-            _this8.getMyOrders();
-            _this8.getMyMeals();
+            _this9.selectedMeal = response.data.data;
+            _this9.showMealDetails = false;
+            _this9.getMyOrders();
+            _this9.getMyMeals();
           });
         }
       }
@@ -77795,7 +77822,7 @@ var render = function() {
                     "v-btn",
                     {
                       attrs: { color: "blue darken-1", flat: "" },
-                      on: { click: _vm.terminateOrder }
+                      on: { click: _vm.terminateMeal }
                     },
                     [_vm._v("Terminate order")]
                   )
@@ -78139,32 +78166,84 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__listOrders__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__listOrders___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__listOrders__);
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
-        this.getOrders();
-    },
-    data: function data() {
-        return {
-            orders: []
-        };
-    },
+  mounted: function mounted() {
+    console.log("Component mounted.");
+    this.getOrders();
+    this.getOrdersWithoutCook();
+  },
+  data: function data() {
+    return {
+      orders: [],
+      unassignedOrders: []
+    };
+  },
 
-    methods: {
-        getOrders: function getOrders() {
-            var _this = this;
+  methods: {
+    getOrders: function getOrders() {
+      var _this = this;
 
-            axios.get("api/orders").then(function (response) {
-                _this.orders = response.data.data;
-                console.log(response.data.data);
-            });
-        }
+      axios.get("api/orders/cook/" + this.$store.state.user.id).then(function (response) {
+        _this.orders = response.data.data;
+        console.log(response.data.data);
+      });
+    },
+    getOrdersWithoutCook: function getOrdersWithoutCook() {
+      var _this2 = this;
+
+      axios.get("api/orders/unassigned").then(function (response) {
+        _this2.unassignedOrders = response.data.data;
+        console.log(response.data.data);
+      });
+    },
+    assignOrder: function assignOrder(order) {
+      var _this3 = this;
+
+      axios.patch("api/order/" + order.id + "/assign").then(function (response) {
+        _this3.getOrders();
+        _this3.getOrdersWithoutCook();
+      });
+    },
+    startPreparation: function startPreparation(order) {
+      var _this4 = this;
+
+      var data = {
+        state: "in preparation"
+      };
+      axios.patch("api/order/" + order.id + "/state", data).then(function (response) {
+        _this4.getOrders();
+      });
+    },
+    endPreparation: function endPreparation(order) {
+      var _this5 = this;
+
+      var data = {
+        state: "prepared"
+      };
+      axios.patch("api/order/" + order.id + "/state", data).then(function (response) {
+        _this5.getOrders();
+      });
     }
+  },
+  components: {
+    cookOrders: __WEBPACK_IMPORTED_MODULE_0__listOrders___default.a
+  }
 });
 
 /***/ }),
@@ -78175,7 +78254,24 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c(
+    "v-container",
+    { attrs: { fluid: "" } },
+    [
+      _c("cook-orders", {
+        attrs: {
+          cookOrders: _vm.orders,
+          unassignedOrders: _vm.unassignedOrders
+        },
+        on: {
+          "assign-order": _vm.assignOrder,
+          "start-preparation": _vm.startPreparation,
+          "end-preparation": _vm.endPreparation
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -78192,6 +78288,321 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 95 */,
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(97)
+/* template */
+var __vue_template__ = __webpack_require__(98)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/cook/listOrders.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cf063462", Component.options)
+  } else {
+    hotAPI.reload("data-v-cf063462", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 97 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["cookOrders", "unassignedOrders"],
+  data: function data() {
+    return {
+      ordersHeaders: [{
+        text: "Table",
+        align: "left",
+        sortable: true,
+        value: "name"
+      }, { text: "Meal", value: "meal" }, { text: "State", value: "state", align: "left" }, { text: "Item", value: "item", align: "left" }, { text: "Item price", value: "price", align: "left" }, { text: "Actions", value: "name", sortable: false }]
+    };
+  },
+
+  methods: {
+    assignToCook: function assignToCook(order) {
+      this.$emit("assign-order", order);
+    },
+    changeToInpreparation: function changeToInpreparation(order) {
+      this.$emit("start-preparation", order);
+    },
+    changeToPrepared: function changeToPrepared(order) {
+      this.$emit("end-preparation", order);
+    }
+  }
+});
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-container",
+    { attrs: { fluid: "" } },
+    [
+      _c("v-card", [_c("v-card-title", [_vm._v("My orders")])], 1),
+      _vm._v(" "),
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: { headers: _vm.ordersHeaders, items: _vm.cookOrders },
+        scopedSlots: _vm._u([
+          {
+            key: "items",
+            fn: function(props) {
+              return [
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.table_number))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.meal_id))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    staticClass: "text-xs-left",
+                    style: {
+                      backgroundColor:
+                        props.item.state == "confirmed" ? "yellow" : "orange"
+                    }
+                  },
+                  [_vm._v(_vm._s(props.item.state))]
+                ),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.item_name))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.item_price))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  { staticClass: "justify-center layout px-0" },
+                  [
+                    props.item.state == "confirmed"
+                      ? _c(
+                          "v-icon",
+                          {
+                            staticClass: "mr-2",
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                _vm.changeToInpreparation(props.item)
+                              }
+                            }
+                          },
+                          [_vm._v("play_arrow")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    props.item.state == "in preparation"
+                      ? _c(
+                          "v-icon",
+                          {
+                            staticClass: "mr-2",
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                _vm.changeToPrepared(props.item)
+                              }
+                            }
+                          },
+                          [_vm._v("done")]
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]
+            }
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("v-card", [_c("v-card-title", [_vm._v("Orders without a cook")])], 1),
+      _vm._v(" "),
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: { headers: _vm.ordersHeaders, items: _vm.unassignedOrders },
+        scopedSlots: _vm._u([
+          {
+            key: "items",
+            fn: function(props) {
+              return [
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.table_number))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.meal_id))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    staticClass: "text-xs-left",
+                    style: {
+                      backgroundColor:
+                        props.item.state == "confirmed" ? "yellow" : "orange"
+                    }
+                  },
+                  [_vm._v(_vm._s(props.item.state))]
+                ),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.item_name))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.item_price))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  { staticClass: "justify-center layout px-0" },
+                  [
+                    _c(
+                      "v-icon",
+                      {
+                        staticClass: "mr-2",
+                        attrs: { small: "" },
+                        on: {
+                          click: function($event) {
+                            _vm.assignToCook(props.item)
+                          }
+                        }
+                      },
+                      [_vm._v("assignment_ind")]
+                    )
+                  ],
+                  1
+                )
+              ]
+            }
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br")
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-cf063462", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

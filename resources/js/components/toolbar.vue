@@ -30,6 +30,11 @@
                 <v-icon>dashboard</v-icon>Waiter Dashboard
               </v-list-tile-title>
             </v-list-tile>
+            <v-list-tile to="/cook" v-if="this.$store.state.user.type=='cook'">
+              <v-list-tile-title>
+                <v-icon>dashboard</v-icon>Cook Dashboard
+              </v-list-tile-title>
+            </v-list-tile>
             <v-list-tile to="/logout">
               <v-list-tile-title>
                 <v-icon>logout</v-icon>Logout

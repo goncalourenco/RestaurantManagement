@@ -84,12 +84,18 @@ class OrderControllerAPI extends Controller
         return OrderResource::collection($orders);
     }
 
-    public function getOrdersCook(){
-        $user = auth()->user();
-        $orders = Order::whereIn('responsible_cook_id', array($user->id, null))
+    public function getOrdersCook(Request $request, $id){
+        $orders = Order::where('responsible_cook_id', $id)
                         ->whereIn("state", array('in preparation', 'confirmed'))
-                        ->orderBy('start', 'desc')->orderBy('state', 'desc')->paginate(10);
+                        ->orderBy('state', 'desc')->orderBy('start', 'asc')->get();;
         return OrderResource::collection($orders);
+    }
+
+    public function assignOrder(Request $request, $id){
+        $order = Order::findOrFail($id);
+        $order->responsible_cook_id =  auth()->user()->id;
+        $order->save();
+        return new OrderResource($order);
     }
 
     public function getPreparedOrdersWaiter(){
@@ -112,9 +118,20 @@ class OrderControllerAPI extends Controller
         return OrderResource::collection($orders);
     }
 
-    public function changeStatus(Request $request, $id){
+    public function getUnassignedOrders(Request $request){
+        $orders = Order::whereNull('responsible_cook_id')->where('state', "confirmed")->get();
+        return OrderResource::collection($orders);
+    }
+
+    public function changeState(Request $request, $id){
         $order = Order::findOrFail($id);
         $order->state = $request->state;
+        if($order->state == "in preparation"){
+            $order->start = date('Y-m-d H:m:s');
+        }
+        else if ($order->state == 'prepared'){
+            $order->end = date('Y-m-d H:m:s');
+        }
         $order->save();
 
         return new OrderResource($order);
