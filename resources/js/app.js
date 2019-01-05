@@ -45,6 +45,7 @@ const login = Vue.component("login", require("./components/auth/login.vue"));
 const logout = Vue.component("logout", require("./components/auth/logout.vue"));
 const waiterDashboard = Vue.component("waiterDashboard", require("./components/waiter/dashboard.vue"));
 const cookComponent = Vue.component("cook", require("./components/cook/cook.vue"));
+const managerDashboard = Vue.component("managerDashboard", require("./components/manager/dashboard.vue"));
 
 const routes = [{
         path: "/items",
@@ -80,6 +81,11 @@ const routes = [{
         path: "/waiter",
         component: waiterDashboard,
         name: "waiterDashboard"
+    },
+    {
+        path: "/manager",
+        component: managerDashboard,
+        name: "managerDashboard"
     }
 ];
 
@@ -92,7 +98,12 @@ router.beforeEach((to, from, next) => {
         next("/login");
     } else if (to.name == "waiterDashboard" && sessionStorage.getItem("user").type != "waiter") {
         next("/items");
+    } else if (to.name == "cook" && sessionStorage.getItem("user").type != "cook") {
+        next("/items");
+    } else if (to.name == "managerDashboard" && sessionStorage.getItem("user").type != "manager") {
+        next("/items");
     }
+
     next();
 });
 

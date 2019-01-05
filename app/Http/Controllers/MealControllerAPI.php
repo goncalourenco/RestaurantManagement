@@ -106,16 +106,20 @@ class MealControllerAPI extends Controller
         return OrderResource::collection($meal->orders);   
     }
 
-    public function terminateOrder(Request $request , $id){
+    public function terminateMeal(Request $request , $id){
         $meal = Meal::findOrFail($id);
         foreach($meal->orders as $order){
             if ($order->state != "delivered"){
+                $meal->decrement('total_price_preview', (float)$order->item->price);
                 $order->state = "not delivered";
                 $order->save();
             }
         }
         $meal->state = "terminated";
         $meal->save();
+        if($meal->total_price_preview <= 0){
+            return new MealResource($meal);
+        }
 
         $invoice = new Invoice();
         $invoice->state = "pending";
@@ -125,6 +129,9 @@ class MealControllerAPI extends Controller
         $invoice->save();
 
         $orders = $meal->orders;
+        $orders = $orders->filter(function ($order) {
+            return $order->state == 'delivered';
+        });
         foreach($orders as $order){
             $invoiceItem = InvoiceItem::where('invoice_id', $invoice->id)->where('item_id', $order->item_id)->first();
             if (isset($invoiceItem->invoice_id)){     

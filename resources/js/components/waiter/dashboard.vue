@@ -44,7 +44,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="closeSummaryDialog">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="terminateOrder">Terminate order</v-btn>
+          <v-btn color="blue darken-1" flat @click="terminateMeal">Terminate order</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -258,7 +258,7 @@ export default {
                 state: "confirmed"
               };
               axios
-                .patch("/api/order/" + this.newMeal.id + "/status", data)
+                .patch("/api/order/" + this.newMeal.id + "/state", data)
                 .then(response => {
                   this.newMeal = response.data.data;
                   this.getMyOrders();
@@ -285,9 +285,9 @@ export default {
         state: "delivered"
       };
       axios
-        .patch("/api/order/" + order.id + "/status", data)
+        .patch("/api/order/" + order.id + "/state", data)
         .then(response => {
-          Object.assign(order, response.data.data);
+          this.getMyOrders();
         })
         .catch(error => {
           console.log(error);
@@ -311,7 +311,7 @@ export default {
     closeSummaryDialog() {
       this.showMealDetails = false;
     },
-    terminateOrder() {
+    terminateMeal() {
       let order;
       let allDelivered = true;
       for (order in this.ordersForMeal) {
