@@ -56,3 +56,7 @@ Route::middleware(['auth:api', 'isWaiter'])->get('meals/{id}/orders', "MealContr
 
 //US20
 Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "MealControllerAPI@terminateOrder");
+
+//US22
+Route::middleware(['auth:api', 'isCashier'])->post('cashier/invoices', "InvoiceControllerAPI@listInvoices");
+
