@@ -35,6 +35,11 @@
                 <v-icon>dashboard</v-icon>Cook Dashboard
               </v-list-tile-title>
             </v-list-tile>
+            <v-list-tile to="/cashier" v-if="this.$store.state.user.type=='cashier'">
+              <v-list-tile-title>
+                <v-icon>dashboard</v-icon>Cashier Dashboard
+              </v-list-tile-title>
+            </v-list-tile>
             <v-list-tile to="/manager" v-if="this.$store.state.user.type=='manager'">
               <v-list-tile-title>
                 <v-icon>dashboard</v-icon>Manager Dashboard

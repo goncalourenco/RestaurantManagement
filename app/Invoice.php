@@ -12,7 +12,7 @@ class Invoice extends Model
 
     public function meal()
     {
-        return $this->hasOne(Meal::class);
+        return $this->belongsTo(Meal::class);
     }
 
     public function items()

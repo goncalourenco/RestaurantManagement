@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Invoice;
 use Illuminate\Http\Request;
+use App\Http\Resources\Invoice as InvoiceResource;
+use App\InvoiceItem;
+use App\Http\Resources\InvoiceItem as ItemResource;
+
 
 class InvoiceControllerAPI extends Controller
 {
@@ -67,9 +71,20 @@ class InvoiceControllerAPI extends Controller
      * @param  \App\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Invoice $invoice)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'nif' => 'required|digits:9',
+            'name' => 'required|alpha|regex:/^[A-z][A-z\s\.\']+$/'
+        ]);
+
+        $invoice = Invoice::findOrFail($id);
+
+        $invoice->name = $data["name"];
+        $invoice->nif = $data["nif"];
+
+        $invoice->save();
+        return new InvoiceResource($invoice);
     }
 
     /**
@@ -83,8 +98,15 @@ class InvoiceControllerAPI extends Controller
         //
     }
 
+    public function getInvoiceItemsForInvoice($id){
+        $invoiceItems = InvoiceItem::where('invoice_id', $id)->get();
+        return ItemResource::collection($invoiceItems);
+    }
+
     public function listInvoices(Request $request){
         
-        $invoices = Invoice::where('state', 'pending')->paginate(10);
+        $invoices = Invoice::where('state', 'pending')->get();
+        //return $invoices;
+        return InvoiceResource::collection($invoices);
     }
 }

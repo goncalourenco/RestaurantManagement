@@ -15,8 +15,8 @@ class Invoice extends JsonResource
     public function toArray($request)
     {
         return [
-            'waiter_name' => $this->meal->waiter->name,
-            'table_number' => $this->meal->table_number,
+            'waiter_name' => $this->meal ? $this->meal->waiter->name : "undefined",
+            'table_number' => $this->meal ? $this->meal->table_number : "undefined",
             'id' => $this->id,
             'state' => $this->state,
             'meal_id' => $this->meal_id,
@@ -24,7 +24,7 @@ class Invoice extends JsonResource
             'name' => $this->name,
             'date' => $this->date,
             'total_price' => $this->total_price,
-            'created_at' => $this->created_at
-        ]
+            'created_at' => $this->created_at->format('Y/m/d H:i')
+        ];
     }
 }

@@ -25003,7 +25003,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(15);
-module.exports = __webpack_require__(109);
+module.exports = __webpack_require__(115);
 
 
 /***/ }),
@@ -25068,6 +25068,7 @@ var logout = Vue.component("logout", __webpack_require__(79));
 var waiterDashboard = Vue.component("waiterDashboard", __webpack_require__(82));
 var cookComponent = Vue.component("cook", __webpack_require__(91));
 var managerDashboard = Vue.component("managerDashboard", __webpack_require__(97));
+var cashierDashboard = Vue.component("cashierDashboard", __webpack_require__(109));
 
 var routes = [{
     path: "/items",
@@ -25101,6 +25102,10 @@ var routes = [{
     path: "/manager",
     component: managerDashboard,
     name: "managerDashboard"
+}, {
+    path: "/cashier",
+    component: cashierDashboard,
+    name: cashierDashboard
 }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
@@ -25115,6 +25120,8 @@ router.beforeEach(function (to, from, next) {
     } else if (to.name == "cook" && sessionStorage.getItem("user").type != "cook") {
         next("/items");
     } else if (to.name == "managerDashboard" && sessionStorage.getItem("user").type != "manager") {
+        next("/items");
+    } else if (to.name == "cashier" && sessionStorage.getItem("user").type != "cashier") {
         next("/items");
     }
 
@@ -74645,6 +74652,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -75008,6 +75020,24 @@ var render = function() {
                                   [
                                     _c("v-icon", [_vm._v("dashboard")]),
                                     _vm._v("Cook Dashboard\n            ")
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        this.$store.state.user.type == "cashier"
+                          ? _c(
+                              "v-list-tile",
+                              { attrs: { to: "/cashier" } },
+                              [
+                                _c(
+                                  "v-list-tile-title",
+                                  [
+                                    _c("v-icon", [_vm._v("dashboard")]),
+                                    _vm._v("Cashier Dashboard\n            ")
                                   ],
                                   1
                                 )
@@ -79331,9 +79361,959 @@ if (false) {
 
 /***/ }),
 /* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(110)
+/* template */
+var __vue_template__ = __webpack_require__(114)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/cashier/dashboad.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-37794e4e", Component.options)
+  } else {
+    hotAPI.reload("data-v-37794e4e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 110 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__listInvoices_vue__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__listInvoices_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__listInvoices_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__invoiceSummary_vue__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__invoiceSummary_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__invoiceSummary_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__editInvoice_vue__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__editInvoice_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__editInvoice_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      invoices: [],
+      invoiceItems: [],
+      showSummary: false,
+      selectedInvoice: "",
+      showEdit: false
+    };
+  },
+
+  methods: {
+    getInvoices: function getInvoices() {
+      var _this = this;
+
+      axios.get("api/cashier/invoices").then(function (response) {
+        _this.invoices = response.data.data;
+      });
+    },
+    getInvoiceDetails: function getInvoiceDetails(invoice) {
+      var _this2 = this;
+
+      axios.get("api/invoiceitems/" + invoice.id).then(function (response) {
+        _this2.selectedInvoice = invoice;
+        _this2.invoiceItems = response.data.data;
+        _this2.showSummary = true;
+      });
+    },
+    closeSummary: function closeSummary() {
+      this.showSummary = false;
+    },
+    editInvoice: function editInvoice(invoice) {
+      this.selectedInvoice = invoice;
+      this.showEdit = true;
+    },
+    cancelEdit: function cancelEdit() {
+      this.showEdit = false;
+    },
+    saveInvoice: function saveInvoice(data) {
+      var _this3 = this;
+
+      axios.put("api/invoices/" + selectedInvoice.id, data).then(function (response) {
+        Object.assign(_this3.selectedInvoice, response.data.data);
+      });
+    }
+  },
+  components: {
+    invoiceList: __WEBPACK_IMPORTED_MODULE_0__listInvoices_vue___default.a,
+    invoiceSummary: __WEBPACK_IMPORTED_MODULE_1__invoiceSummary_vue___default.a,
+    editInvoice: __WEBPACK_IMPORTED_MODULE_2__editInvoice_vue___default.a
+  },
+  mounted: function mounted() {
+    this.getInvoices();
+  }
+});
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(112)
+/* template */
+var __vue_template__ = __webpack_require__(113)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/cashier/listInvoices.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-15232b8a", Component.options)
+  } else {
+    hotAPI.reload("data-v-15232b8a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["invoices"],
+  data: function data() {
+    return {
+      invoiceHeaders: [{
+        text: "ID",
+        align: "left",
+        sortable: true,
+        value: "name"
+      }, { text: "Table Number", value: "tablenumber" }, { text: "Waiter Name", value: "waiterName", align: "left" }, { text: "Meal ID", value: "mealID", align: "left" }, { text: "Total price", value: "totalPrice", align: "left" }, { text: "State", value: "state", align: "left" }, { text: "Actions", value: "name", sortable: false }]
+    };
+  },
+
+  methods: {
+    details: function details(invoice) {
+      this.$emit("details", invoice);
+    },
+    edit: function edit(invoice) {
+      this.$emit('edit', invoice);
+    }
+  }
+});
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-container",
+    { attrs: { fluid: "" } },
+    [
+      _c("v-card", [_c("v-card-title", [_vm._v("Pending invoices")])], 1),
+      _vm._v(" "),
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: { headers: _vm.invoiceHeaders, items: _vm.invoices },
+        scopedSlots: _vm._u([
+          {
+            key: "items",
+            fn: function(props) {
+              return [
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.id))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.table_number))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.waiter_name))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.meal_id))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.total_price))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.state))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  { staticClass: "justify-center layout px-0" },
+                  [
+                    _c(
+                      "v-icon",
+                      {
+                        staticClass: "mr-2",
+                        attrs: { small: "" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.details(props.item)
+                          }
+                        }
+                      },
+                      [_vm._v("details")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-icon",
+                      {
+                        staticClass: "mr-2",
+                        attrs: { small: "" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.edit(props.item)
+                          }
+                        }
+                      },
+                      [_vm._v("edit")]
+                    )
+                  ],
+                  1
+                )
+              ]
+            }
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-15232b8a", module.exports)
+  }
+}
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-container",
+    { attrs: { fluid: "" } },
+    [
+      _c("invoice-list", {
+        attrs: { invoices: _vm.invoices },
+        on: { details: _vm.getInvoiceDetails, edit: _vm.editInvoice }
+      }),
+      _vm._v(" "),
+      _c("invoice-summary", {
+        attrs: {
+          invoice: _vm.selectedInvoice,
+          "invoice-items": _vm.invoiceItems,
+          show: _vm.showSummary
+        },
+        on: { close: _vm.closeSummary }
+      }),
+      _vm._v(" "),
+      _c("edit-invoice", {
+        attrs: { show: _vm.showEdit, invoice: _vm.selectedInvoice },
+        on: { cancel: _vm.cancelEdit, save: _vm.saveInvoice }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-37794e4e", module.exports)
+  }
+}
+
+/***/ }),
+/* 115 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 116 */,
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(118)
+/* template */
+var __vue_template__ = __webpack_require__(119)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/cashier/invoiceSummary.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-344fcbe0", Component.options)
+  } else {
+    hotAPI.reload("data-v-344fcbe0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 118 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["show", "invoice", "invoiceItems"],
+  methods: {
+    close: function close() {
+      this.$emit("close");
+    }
+  }
+});
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-dialog",
+    {
+      attrs: { "max-width": "500px" },
+      model: {
+        value: _vm.show,
+        callback: function($$v) {
+          _vm.show = $$v
+        },
+        expression: "show"
+      }
+    },
+    [
+      _c(
+        "v-card",
+        [
+          _c("v-card-title", [
+            _c("span", { staticClass: "headline" }, [_vm._v("Meal Summary")])
+          ]),
+          _vm._v(" "),
+          _c(
+            "v-card-text",
+            [
+              _c(
+                "v-container",
+                { attrs: { "grid-list-md": "" } },
+                [
+                  _c(
+                    "v-layout",
+                    { attrs: { wrap: "" } },
+                    [
+                      _c("v-layout", { attrs: { column: "" } }, [
+                        _c("p", [
+                          _c("b", [_vm._v("Waiter:")]),
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.invoice.waiter_name) +
+                              "\n            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("b", [_vm._v("Name:")]),
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.invoice.name) +
+                              "\n            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("b", [_vm._v("NIF:")]),
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.invoice.nif) +
+                              "\n            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("b", [_vm._v("Date:")]),
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.invoice.date) +
+                              "\n            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("b", [_vm._v("Table number:")]),
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.invoice.table_number) +
+                              "\n            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _c("b", [_vm._v("Price preview:")]),
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.invoice.total_price) +
+                              "€\n            "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { column: "" } },
+                        _vm._l(_vm.invoiceItems, function(invoiceItem) {
+                          return _c(
+                            "p",
+                            {
+                              key:
+                                invoiceItem.invoice_id +
+                                "" +
+                                "" +
+                                invoiceItem.item_id
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(invoiceItem.item_name) +
+                                  " - " +
+                                  _vm._s(invoiceItem.item_price) +
+                                  "€ x " +
+                                  _vm._s(invoiceItem.quantity) +
+                                  " -> " +
+                                  _vm._s(invoiceItem.sub_total_price)
+                              )
+                            ]
+                          )
+                        })
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-card-actions",
+            [
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  attrs: { color: "blue darken-1", flat: "" },
+                  on: { click: _vm.close }
+                },
+                [_vm._v("Close")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-344fcbe0", module.exports)
+  }
+}
+
+/***/ }),
+/* 120 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(121)
+/* template */
+var __vue_template__ = __webpack_require__(122)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/cashier/editInvoice.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75409afc", Component.options)
+  } else {
+    hotAPI.reload("data-v-75409afc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 121 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      name: "",
+      nif: "",
+      nameRules: [function (v) {
+        return !!v || "Name is required";
+      }, function (v) {
+        return v.length <= 50 || "Name must be less than 50 characters";
+      }, function (v) {
+        return (/^[a-zA-Z ]+$/.test(v) || "Invalid characters"
+        );
+      }],
+      nifRules: [function (v) {
+        return !!v || "Nif is required";
+      }, function (v) {
+        return v.length != 9 || "Must be exactly 9 characters";
+      }, function (v) {
+        return (/\d{9}/.test(v) || "Invalid characters"
+        );
+      }]
+    };
+  },
+
+  props: ["invoice", "show"],
+  methods: {
+    cancel: function cancel() {
+      this.$emit("cancel");
+    },
+    save: function save() {
+      if (this.name.trim() == "" || this.nif.trim() == "") {} else {
+        var data = {
+          name: this.name,
+          nif: this.nif
+        };
+        this.$emit("saveInvoice", data);
+      }
+    }
+  }
+});
+
+/***/ }),
+/* 122 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-layout",
+    { attrs: { row: "", "justify-center": "" } },
+    [
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "600px" },
+          model: {
+            value: _vm.show,
+            callback: function($$v) {
+              _vm.show = $$v
+            },
+            expression: "show"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c("v-card-title", [
+                _c("span", { staticClass: "headline" }, [
+                  _vm._v(
+                    "Add Nif and client to invoice " + _vm._s(_vm.invoice.id)
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-text",
+                [
+                  _c(
+                    "v-container",
+                    { attrs: { "grid-list-md": "" } },
+                    [
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  rules: _vm.nameRules,
+                                  label: "NIF*",
+                                  hint: "Client's NIF",
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.name,
+                                  callback: function($$v) {
+                                    _vm.name = $$v
+                                  },
+                                  expression: "name"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Name",
+                                  hint: "Client's name",
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.nif,
+                                  callback: function($$v) {
+                                    _vm.nif = $$v
+                                  },
+                                  expression: "nif"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("small", [_vm._v("*indicates required field")])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "blue darken-1", flat: "" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.cancel($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "blue darken-1", flat: "" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.save($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Save")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-75409afc", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

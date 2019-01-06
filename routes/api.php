@@ -61,10 +61,16 @@ Route::middleware(['auth:api', 'isWaiter'])->get('meals/{id}/orders', "MealContr
 Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "MealControllerAPI@terminateOrder");
 
 //US22
-Route::middleware(['auth:api', 'isCashier'])->post('cashier/invoices', "InvoiceControllerAPI@listInvoices");
+Route::middleware(['auth:api', 'isCashier'])->get('cashier/invoices', "InvoiceControllerAPI@listInvoices");
 
+
+//US24
+Route::middleware(['auth:api', 'isCashier'])->get('invoiceitems/{id}', 'InvoiceControllerAPI@getInvoiceItemsForInvoice');
 
 Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "MealControllerAPI@terminateMeal");
+
+//US25
+Route::middleware(['auth:api', 'isCashier'])->put('invoice/{id}', 'InvoiceControllerAPI@update');
 
 //US28
 Route::middleware(['auth:api', 'isManager'])->get('tables', "TableControllerAPI@index");
