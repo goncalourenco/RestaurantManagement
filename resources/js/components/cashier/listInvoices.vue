@@ -14,6 +14,12 @@
         <td class="justify-center layout px-0">
           <v-icon small class="mr-2" @click.prevent="details(props.item)">details</v-icon>
           <v-icon small class="mr-2" @click.prevent="edit(props.item)">edit</v-icon>
+          <v-icon
+            small
+            class="mr-2"
+            v-if="props.item.name != null && props.item.nif !=null"
+            @click="setAsPaid(props.item)"
+          >done</v-icon>
         </td>
       </template>
     </v-data-table>
@@ -45,8 +51,11 @@ export default {
     details(invoice) {
       this.$emit("details", invoice);
     },
-    edit(invoice){
-      this.$emit('edit', invoice);
+    edit(invoice) {
+      this.$emit("edit", invoice);
+    },
+    setAsPaid(invoice) {
+      this.$emit("pay", invoice);
     }
   }
 };

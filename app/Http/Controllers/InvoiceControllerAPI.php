@@ -74,8 +74,8 @@ class InvoiceControllerAPI extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'nif' => 'required|digits:9',
-            'name' => 'required|alpha|regex:/^[A-z][A-z\s\.\']+$/'
+            'nif' => 'required',
+            'name' => 'required'
         ]);
 
         $invoice = Invoice::findOrFail($id);
@@ -98,6 +98,19 @@ class InvoiceControllerAPI extends Controller
         //
     }
 
+    public function changeState(Request $request, $id){
+        $invoice = Invoice::findOrFail($id);
+        if ($request->state == 'paid' && $invoice->name!=null && $invoice->nif!=null){
+            $invoice->state='paid';
+            $invoice->save();
+            $meal = $invoice->meal;
+            $meal->end = date('Y-m-d H:m:s');
+            $meal->state='paid';
+            $meal->save();
+        }
+        return new InvoiceResource($invoice);
+    }
+
     public function getInvoiceItemsForInvoice($id){
         $invoiceItems = InvoiceItem::where('invoice_id', $id)->get();
         return ItemResource::collection($invoiceItems);
@@ -105,7 +118,7 @@ class InvoiceControllerAPI extends Controller
 
     public function listInvoices(Request $request){
         
-        $invoices = Invoice::where('state', 'pending')->get();
+        $invoices = Invoice::where('state', 'pending')->orderBy('id', 'asc')->get();
         //return $invoices;
         return InvoiceResource::collection($invoices);
     }

@@ -79436,6 +79436,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -79481,8 +79486,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     saveInvoice: function saveInvoice(data) {
       var _this3 = this;
 
-      axios.put("api/invoices/" + selectedInvoice.id, data).then(function (response) {
-        Object.assign(_this3.selectedInvoice, response.data.data);
+      axios.put("api/invoice/" + this.selectedInvoice.id, data).then(function (response) {
+        _this3.getInvoices();
+        _this3.showEdit = false;
+      });
+    },
+    setAsPaid: function setAsPaid(invoice) {
+      var _this4 = this;
+
+      var data = {
+        state: "paid"
+      };
+      axios.patch("api/invoice/" + invoice.id + "/state", data).then(function (response) {
+        _this4.getInvoices();
       });
     }
   },
@@ -79571,6 +79587,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["invoices"],
@@ -79590,7 +79612,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.$emit("details", invoice);
     },
     edit: function edit(invoice) {
-      this.$emit('edit', invoice);
+      this.$emit("edit", invoice);
+    },
+    setAsPaid: function setAsPaid(invoice) {
+      this.$emit("pay", invoice);
     }
   }
 });
@@ -79673,7 +79698,23 @@ var render = function() {
                         }
                       },
                       [_vm._v("edit")]
-                    )
+                    ),
+                    _vm._v(" "),
+                    props.item.name != null && props.item.nif != null
+                      ? _c(
+                          "v-icon",
+                          {
+                            staticClass: "mr-2",
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                _vm.setAsPaid(props.item)
+                              }
+                            }
+                          },
+                          [_vm._v("done")]
+                        )
+                      : _vm._e()
                   ],
                   1
                 )
@@ -79710,7 +79751,11 @@ var render = function() {
     [
       _c("invoice-list", {
         attrs: { invoices: _vm.invoices },
-        on: { details: _vm.getInvoiceDetails, edit: _vm.editInvoice }
+        on: {
+          pay: _vm.setAsPaid,
+          details: _vm.getInvoiceDetails,
+          edit: _vm.editInvoice
+        }
       }),
       _vm._v(" "),
       _c("invoice-summary", {
@@ -80151,7 +80196,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           name: this.name,
           nif: this.nif
         };
-        this.$emit("saveInvoice", data);
+        this.$emit("save", data);
       }
     }
   }

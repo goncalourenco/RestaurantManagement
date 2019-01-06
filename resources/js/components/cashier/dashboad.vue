@@ -1,6 +1,11 @@
 <template>
   <v-container fluid>
-    <invoice-list :invoices="invoices" @details="getInvoiceDetails" @edit="editInvoice"></invoice-list>
+    <invoice-list
+      :invoices="invoices"
+      @pay="setAsPaid"
+      @details="getInvoiceDetails"
+      @edit="editInvoice"
+    ></invoice-list>
     <invoice-summary
       :invoice="selectedInvoice"
       :invoice-items="invoiceItems"
@@ -54,9 +59,22 @@ export default {
       this.showEdit = false;
     },
     saveInvoice(data) {
-      axios.put("api/invoices/" + selectedInvoice.id, data).then(response => {
-        Object.assign(this.selectedInvoice, response.data.data);
-      });
+      axios
+        .put("api/invoice/" + this.selectedInvoice.id, data)
+        .then(response => {
+          this.getInvoices();
+          this.showEdit = false;
+        });
+    },
+    setAsPaid(invoice) {
+      let data = {
+        state: "paid"
+      };
+      axios
+        .patch("api/invoice/" + invoice.id + "/state", data)
+        .then(response => {
+          this.getInvoices();
+        });
     }
   },
   components: {

@@ -72,6 +72,9 @@ Route::middleware(['auth:api', 'isWaiter'])->patch('meals/{id}/terminate', "Meal
 //US25
 Route::middleware(['auth:api', 'isCashier'])->put('invoice/{id}', 'InvoiceControllerAPI@update');
 
+//US26
+Route::middleware(['auth:api', 'isCashier'])->patch('invoice/{id}/state', 'InvoiceControllerAPI@changeState');
+
 //US28
 Route::middleware(['auth:api', 'isManager'])->get('tables', "TableControllerAPI@index");
 Route::middleware(['auth:api', 'isManager'])->post('tables', "TableControllerAPI@store");

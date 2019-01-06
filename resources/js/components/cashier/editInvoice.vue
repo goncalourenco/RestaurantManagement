@@ -63,7 +63,7 @@ export default {
           name: this.name,
           nif: this.nif
         };
-        this.$emit("saveInvoice", data);
+        this.$emit("save", data);
       }
     }
   }
