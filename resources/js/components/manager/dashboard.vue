@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-btn @click.prevent="showHideTable">Table Management</v-btn>
+    <v-btn @click.prevent="showHideTable" v-if="!showTableManagement">Table Management</v-btn>
     <table-management v-if="showTableManagement" @close="showHideTable"></table-management>
   </v-container>
 </template>
@@ -18,8 +18,7 @@ export default {
   methods: {
     showHideTable: function() {
       this.showTableManagement = !this.showTableManagement;
-    },
-    closeTableMa
+    }
   }
 };
 </script>

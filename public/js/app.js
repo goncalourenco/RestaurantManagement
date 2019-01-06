@@ -78704,8 +78704,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   methods: {
     showHideTable: function showHideTable() {
       this.showTableManagement = !this.showTableManagement;
-    },
-    closeTableMa: closeTableMa
+    }
   }
 });
 
@@ -79298,18 +79297,20 @@ var render = function() {
     "v-container",
     { attrs: { fluid: "" } },
     [
-      _c(
-        "v-btn",
-        {
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.showHideTable($event)
-            }
-          }
-        },
-        [_vm._v("Table Management")]
-      ),
+      !_vm.showTableManagement
+        ? _c(
+            "v-btn",
+            {
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.showHideTable($event)
+                }
+              }
+            },
+            [_vm._v("Table Management")]
+          )
+        : _vm._e(),
       _vm._v(" "),
       _vm.showTableManagement
         ? _c("table-management", { on: { close: _vm.showHideTable } })
