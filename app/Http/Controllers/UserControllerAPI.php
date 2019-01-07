@@ -65,6 +65,14 @@ class UserControllerAPI extends Controller
         return new UserResource($user);
     }
 
+    public function deleteUser(Request $request, $id){
+        $user = User::findOrFail($id);
+        if ($user->id != auth()->user()->id){
+            $user->delete();
+        }
+        return new UserResource($user);
+    }
+
     public function myUserDetails(Request $request)
     {
         return new UserResource($request->user());

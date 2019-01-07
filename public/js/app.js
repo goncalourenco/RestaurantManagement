@@ -25133,7 +25133,8 @@ router.beforeEach(function (to, from, next) {
 
 Vue.use(new __WEBPACK_IMPORTED_MODULE_4_vue_socket_io___default.a({
     debug: false,
-    connection: 'http://165.227.5.200:8080'
+    //connection: 'http://165.227.5.200:8080'
+    connection: 'http://192.168.10.10:8080'
 }));
 
 window.Vue = __webpack_require__(3);
@@ -25181,6 +25182,7 @@ var app = new Vue({
             });
         }
     }
+
 });
 
 /***/ }),
@@ -79426,6 +79428,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -79459,6 +79466,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       axios.patch("api/user/" + id + "/unblock").then(function (response) {
         _this3.$socket.emit("user_unblocked", response.data.data);
       });
+    },
+    deleteUser: function deleteUser(id) {
+      var _this4 = this;
+
+      axios.delete("api/user/" + id).then(function (response) {
+        _this4.$socket.emit("user_deleted", response.data.data);
+      });
     }
   },
   components: {
@@ -79476,6 +79490,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.getUserList();
     },
     user_unblocked: function user_unblocked(user) {
+      this.getUserList();
+    },
+    user_deleted: function user_deleted(user) {
       this.getUserList();
     }
   }
@@ -79565,6 +79582,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -79583,6 +79601,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     unblockUser: function unblockUser(id) {
       this.$emit("unblock-user", id);
+    },
+    deleteUser: function deleteUser(id) {
+      this.$emit("delete-user", id);
     }
   }
 });
@@ -79678,7 +79699,21 @@ var render = function() {
                             }
                           },
                           [_vm._v("lock_open")]
-                        )
+                        ),
+                    _vm._v(" "),
+                    _c(
+                      "v-icon",
+                      {
+                        staticClass: "mr-2",
+                        attrs: { small: "" },
+                        on: {
+                          click: function($event) {
+                            _vm.deleteUser(props.item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("delete")]
+                    )
                   ],
                   1
                 )
@@ -79719,7 +79754,11 @@ var render = function() {
     [
       _c("user-list", {
         attrs: { users: _vm.users },
-        on: { "block-user": _vm.blockUser, "unblock-user": _vm.unblockUser }
+        on: {
+          "block-user": _vm.blockUser,
+          "unblock-user": _vm.unblockUser,
+          "delete-user": _vm.deleteUser
+        }
       }),
       _vm._v(" "),
       _c(

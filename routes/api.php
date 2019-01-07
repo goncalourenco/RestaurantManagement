@@ -84,3 +84,4 @@ Route::middleware(['auth:api', 'isManager'])->delete('table/{id}', "TableControl
 Route::middleware(['auth:api', 'isManager'])->get("users", "UserControllerAPI@getUserList");
 Route::middleware(['auth:api', 'isManager'])->patch("user/{id}/block", "UserControllerAPI@blockUser");
 Route::middleware(['auth:api', 'isManager'])->patch("user/{id}/unblock", "UserControllerAPI@unblockUser");
+Route::middleware(['auth:api', 'isManager'])->delete("user/{id}", "UserControllerAPI@deleteUser");

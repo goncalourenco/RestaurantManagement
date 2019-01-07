@@ -22,6 +22,7 @@
             @click="blockUser(props.item.id)"
           >block</v-icon>
           <v-icon small class="mr-2" v-else @click="unblockUser(props.item.id)">lock_open</v-icon>
+          <v-icon small class="mr-2" @click="deleteUser(props.item.id)">delete</v-icon>
         </td>
       </template>
     </v-data-table>
@@ -55,6 +56,9 @@ export default {
     },
     unblockUser(id) {
       this.$emit("unblock-user", id);
+    },
+    deleteUser(id) {
+      this.$emit("delete-user", id);
     }
   }
 };
