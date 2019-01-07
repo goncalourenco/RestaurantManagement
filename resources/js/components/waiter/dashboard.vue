@@ -180,7 +180,6 @@ export default {
     };
   },
   mounted() {
-    console.log("Mounted waiter dashboard.");
     this.getTables();
     this.getMyMeals();
     this.getItems();
@@ -193,7 +192,6 @@ export default {
     mealSaved() {
       this.showCreateMeal = false;
       this.message = "Meal created with success!";
-      this.getMyMeals();
     },
     mealCanceled() {
       this.showCreateMeal = false;
@@ -201,7 +199,6 @@ export default {
     getItems() {
       axios.get("api/items").then(response => {
         this.items = response.data.data;
-        console.log(response.data.data);
       });
     },
     getTables() {
@@ -210,9 +207,7 @@ export default {
         .then(response => {
           this.tables = response.data.data;
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => {});
     },
     getMyMeals() {
       axios
@@ -220,9 +215,7 @@ export default {
         .then(response => {
           this.myMeals = response.data.data;
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => {});
     },
     getMyOrders() {
       axios.get("api/waiter/orders").then(response => {
@@ -246,8 +239,8 @@ export default {
         .then(response => {
           //updates the price preview
           this.newMeal = response.data.data;
-          this.getMyOrders();
-          this.getMyMeals();
+          this.$socket.emit("order_created", response.data.data);
+          //this.getMyOrders();
           this.dialog = false;
           this.selectedItem = null;
           this.cancellable = true;
@@ -261,21 +254,17 @@ export default {
                 .patch("/api/order/" + this.newMeal.id + "/state", data)
                 .then(response => {
                   this.newMeal = response.data.data;
-                  this.getMyOrders();
+                  this.$socket.emit("order_created", response.data.data);
                 });
             }
           }, 5000);
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => {});
     },
     deleteOrder(order) {
       if (this.cancellable) {
         axios.delete("api/orders/" + order.id).then(response => {
-          console.log("APAGOU");
           this.getMyOrders();
-
           this.cancellable = false;
         });
       }
@@ -289,9 +278,7 @@ export default {
         .then(response => {
           this.getMyOrders();
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => {});
     },
     mealSummary(meal) {
       this.selectedMeal = meal;
@@ -304,9 +291,7 @@ export default {
         .then(response => {
           this.ordersForMeal = response.data.data;
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => {});
     },
     closeSummaryDialog() {
       this.showMealDetails = false;
@@ -330,8 +315,8 @@ export default {
             .then(response => {
               this.selectedMeal = response.data.data;
               this.showMealDetails = false;
-              this.getMyOrders();
-              this.getMyMeals();
+              this.$socket.emit("order_terminated", response.data.data);
+              this.$socket.emit("invoice_created", response.data.data);
             });
         }
       }
@@ -340,6 +325,25 @@ export default {
   components: {
     createMeal,
     mealDetails
+  },
+  sockets: {
+    connect() {
+      console.log("socket connected (socket ID = " + this.$socket.id + ")");
+    },
+    order_created(order) {
+      this.getMyOrders();
+      this.getMyMeals();
+    },
+    order_terminated(order) {
+      this.getMyOrders();
+      this.getMyMeals();
+    },
+    order_prepared(order) {
+      this.getMyOrders();
+    },
+    meal_created(meal) {
+      this.getMyMeals();
+    }
   }
 };
 </script>

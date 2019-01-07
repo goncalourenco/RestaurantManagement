@@ -84,6 +84,14 @@ export default {
   },
   mounted() {
     this.getInvoices();
+  },
+  sockets: {
+    connect() {
+      console.log("socket connected (socket ID = " + this.$socket.id + ")");
+    },
+    invoice_created(order) {
+      this.getInvoices();
+    }
   }
 };
 </script>

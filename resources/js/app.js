@@ -36,6 +36,7 @@ Vue.use(VueRouter);
 import Vuetify from "vuetify";
 Vue.use(Vuetify);
 import "vuetify/dist/vuetify.min.css";
+import VueSocketio from 'vue-socket.io';
 
 import menuToolbar from './components/toolbar.vue';
 
@@ -115,6 +116,11 @@ router.beforeEach((to, from, next) => {
     next();
 });
 
+Vue.use(new VueSocketio({
+    debug: true,
+    connection: 'http://192.168.10.10:8080'
+}));
+
 window.Vue = require("vue");
 const app = new Vue({
     el: "#app",
@@ -161,5 +167,5 @@ const app = new Vue({
             });
         }
     },
-
+    
 });

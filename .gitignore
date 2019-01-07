@@ -13,5 +13,6 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
-
+/WebSocketServer/node_modules/*
+/WebSocketServer/node_modules
 public/js/app\.js

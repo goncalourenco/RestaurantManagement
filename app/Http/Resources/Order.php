@@ -25,6 +25,7 @@ class Order extends JsonResource
             'table_number' => $this->meal->table_number,
             'responsible_cook_id' => $this->responsible_cook_id,
             'start' => $this->start,
+            'waiter_id' => $this->meal->resposible_waiter_id, 
             'end' => $this->end
         ];
     }

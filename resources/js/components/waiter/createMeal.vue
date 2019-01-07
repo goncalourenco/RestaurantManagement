@@ -46,6 +46,7 @@ export default {
         .post("api/meals/create", data)
         .then(resposnse => {
           this.$emit("meal-saved");
+          this.$socket.emit("meal_created", resposnse.data.data);
         })
         .catch(error => {});
     },

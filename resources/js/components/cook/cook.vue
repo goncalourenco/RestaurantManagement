@@ -58,12 +58,23 @@ export default {
         state: "prepared"
       };
       axios.patch("api/order/" + order.id + "/state", data).then(response => {
-        this.getOrders();
+        this.$socket.emit("order_prepared", response.data.data);
       });
     }
   },
   components: {
     cookOrders
+  },
+  sockets: {
+    connect() {
+      console.log("socket connected (socket ID = " + this.$socket.id + ")");
+    },
+    order_created(order) {
+      this.getOrdersWithoutCook();
+    },
+    order_prepared(order) {
+      this.getOrders();
+    }
   }
 };
 </script>

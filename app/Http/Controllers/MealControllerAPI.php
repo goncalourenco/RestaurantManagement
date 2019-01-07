@@ -112,6 +112,7 @@ class MealControllerAPI extends Controller
             if ($order->state != "delivered"){
                 $meal->decrement('total_price_preview', (float)$order->item->price);
                 $order->state = "not delivered";
+                $order->end = date('Y-m-d H:m:s');
                 $order->save();
             }
         }
