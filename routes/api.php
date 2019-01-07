@@ -79,3 +79,8 @@ Route::middleware(['auth:api', 'isCashier'])->patch('invoice/{id}/state', 'Invoi
 Route::middleware(['auth:api', 'isManager'])->get('tables', "TableControllerAPI@index");
 Route::middleware(['auth:api', 'isManager'])->post('tables', "TableControllerAPI@store");
 Route::middleware(['auth:api', 'isManager'])->delete('table/{id}', "TableControllerAPI@destroy");
+
+//US29
+Route::middleware(['auth:api', 'isManager'])->get("users", "UserControllerAPI@getUserList");
+Route::middleware(['auth:api', 'isManager'])->patch("user/{id}/block", "UserControllerAPI@blockUser");
+Route::middleware(['auth:api', 'isManager'])->patch("user/{id}/unblock", "UserControllerAPI@unblockUser");

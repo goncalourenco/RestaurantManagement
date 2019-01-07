@@ -22,6 +22,28 @@ class UserControllerAPI extends Controller
         //return UserResource::collection(User::pa)
     }
 
+    public function blockUser(Request $request, $id){
+        $user = User::findOrFail($id);
+        if ($user->id != auth()->user()->id){
+            $user->blocked = 1;
+            $user->save();
+        }
+
+        return new UserResource($user);
+    }
+
+    public function unblockUser(Request $request, $id){
+        $user = User::findOrFail($id);
+        if ($user->id != auth()->user()->id){
+            $user->blocked = 0;
+            $user->save();
+        }
+    }
+
+    public function getUserList(Request $request){
+        return UserResource::collection(User::all());
+    }
+
     public function changePassword(Request $request, $id){
         $request->validate([
             'old_password' => ['required', new OldPassword],

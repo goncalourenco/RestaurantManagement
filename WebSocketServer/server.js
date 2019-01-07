@@ -74,4 +74,10 @@ io.on('connection', function (socket) {
         // socket.broadcast.emit('order_created', order);
         io.sockets.emit('invoice_created', meal);
     });
+    socket.on('user_unblocked', (user) => {       
+        io.sockets.emit('user_unblocked', user);
+    });
+    socket.on('user_blocked', (user) => {       
+        io.sockets.emit('user_blocked', user);
+    });
 });

@@ -167,5 +167,5 @@ const app = new Vue({
             });
         }
     },
-    
+
 });
