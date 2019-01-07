@@ -30,7 +30,7 @@ var io = require('socket.io')(app);
 var LoggedUsers = require('./loggedusers.js');
 
 app.listen(8080, function () {
-    console.log('listening on *:8080');
+    console.log('listening on *:8080  - WebSocketServer is running');
 });
 
 // ------------------------

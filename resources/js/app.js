@@ -117,8 +117,8 @@ router.beforeEach((to, from, next) => {
 });
 
 Vue.use(new VueSocketio({
-    debug: true,
-    connection: 'http://192.168.10.10:8080'
+    debug: false,
+    connection: 'http://165.227.5.200:8080'
 }));
 
 window.Vue = require("vue");
